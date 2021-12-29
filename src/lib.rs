@@ -1,7 +1,7 @@
+use std::sync::mpsc::Receiver;
+use std::sync::{mpsc, Arc, Mutex};
 use std::thread;
 use std::thread::JoinHandle;
-use std::sync::{Arc, mpsc, Mutex};
-use std::sync::mpsc::Receiver;
 
 type Job = Box<dyn FnOnce() + Send + 'static>;
 
@@ -9,7 +9,6 @@ pub struct ThreadPool {
     threads: Vec<Worker>,
     sender: mpsc::Sender<Message>,
 }
-
 
 impl ThreadPool {
     pub fn new(size: usize) -> Self {
@@ -23,21 +22,17 @@ impl ThreadPool {
             let w = Worker::new(id, Arc::clone(&receiver));
             threads.push(w)
         }
-        ThreadPool {
-            threads,
-            sender,
-        }
+        ThreadPool { threads, sender }
     }
 
     pub fn execute<F>(&self, f: F)
-        where
-            F: FnOnce() + Send + 'static
+    where
+        F: FnOnce() + Send + 'static,
     {
         let job = Box::new(f);
         self.sender.send(Message::NewJob(job)).unwrap();
     }
 }
-
 
 pub struct Worker {
     id: usize,

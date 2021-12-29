@@ -1,8 +1,8 @@
-use std::net::{TcpListener, TcpStream};
+use crate::config::Config;
+use mserver::ThreadPool;
 use std::fs;
 use std::io::{Read, Write};
-use mserver::ThreadPool;
-use crate::config::Config;
+use std::net::{TcpListener, TcpStream};
 
 pub struct Route {
     method: String,
@@ -28,19 +28,15 @@ impl Routes {
     }
 
     pub fn new() -> Routes {
-        Routes {
-            routes: vec![],
-        }
+        Routes { routes: vec![] }
     }
 
     pub fn listen_and_serve(&mut self, config: Config) {
         for page in config.pages {
-            self.routes.push(
-                Route {
-                    method: "GET".to_string(),
-                    markdown: page.markdown,
-                }
-            )
+            self.routes.push(Route {
+                method: "GET".to_string(),
+                markdown: page.markdown,
+            })
         }
         let addr = format!("{}:{}", config.ip, config.port);
         let listener = TcpListener::bind(addr).unwrap();
@@ -71,12 +67,7 @@ impl Routes {
                             stream.flush();
                         }
                         None => {
-                            println!("No
-        route
-        has
-        been
-        found.
-        ")
+                            println!("No route has been found.")
                         }
                     }
                 });

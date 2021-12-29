@@ -1,20 +1,22 @@
+use mserver::ThreadPool;
+use std::env;
+use std::fs;
 use std::io::prelude::*;
 use std::net::{TcpListener, TcpStream};
-use std::fs;
 use std::thread;
 use std::time::Duration;
-use mserver::ThreadPool;
+use crate::config::Config;
+use crate::server::Routes;
+
+mod server;
+mod config;
 
 fn main() {
-    let listener = TcpListener::bind("127.0.0.1:8080").unwrap();
-    let pool = ThreadPool::new(20);
-    for stream in listener.incoming() {
-        let stream = stream.unwrap();
-        pool.execute(|| {
-            handle(stream);
-        });
-    }
-    println!("Goodbye!");
+    let config = crate::config::Config::new();
+    let mut routes = Routes::new();
+
+    routes.listen_and_serve(config);
+    // let listener = TcpListener::bind("127.0.0.1:8080").unwrap();
 }
 
 fn handle(mut stream: TcpStream) -> std::io::Result<()> {

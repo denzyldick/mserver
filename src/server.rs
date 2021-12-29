@@ -46,8 +46,7 @@ impl Routes {
             let mut stream = stream.unwrap();
             let mut buffer = [0; 1024];
             stream.read(&mut buffer).unwrap();
-            let get = b"GET / HTTP / 1.1\r\n
-        ";
+            let get = b"GET / HTTP / 1.1";
             if buffer.starts_with(get) {
                 pool.execute(move || {
                     let route = Route {

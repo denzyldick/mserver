@@ -3,6 +3,7 @@ use mserver::ThreadPool;
 use std::fs;
 use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream};
+use std::str;
 
 pub struct Route {
     method: String,
@@ -11,7 +12,7 @@ pub struct Route {
 
 impl Route {
     pub fn generate(&self) -> String {
-        let contents = fs::read_to_string(format!("pages/{}", self.markdown)).unwrap();
+        let contents = fs::read_to_string(&self.markdown).unwrap();
         let body = markdown::to_html(&contents);
 
         format!("<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><title> {} </title></head><body>{}</body></html>", "welcome to my internet space.", body)
@@ -35,7 +36,7 @@ impl Routes {
         for page in config.pages {
             self.routes.push(Route {
                 method: "GET".to_string(),
-                markdown: page.markdown,
+                markdown: format!("{}/{}", config.data_dir, page.markdown),
             })
         }
         let addr = format!("{}:{}", config.ip, config.port);
@@ -46,14 +47,13 @@ impl Routes {
             let mut stream = stream.unwrap();
             let mut buffer = [0; 1024];
             stream.read(&mut buffer).unwrap();
-            let get = b"GET / HTTP / 1.1";
-            if buffer.starts_with(get) {
-                pool.execute(move || {
-                    let route = Route {
-                        method: "GET".to_string(),
-                        markdown: "index.md".to_string(),
-                    };
+            let get = b"GET";
+            println!("{}", str::from_utf8(&buffer).unwrap());
 
+            if buffer.starts_with(get) {
+                let re = Regex::new(format!(r"^GET /{}", "index")).unwrap();
+
+                pool.execute(move || {
                     match Some(route) {
                         Some(route) => {
                             let html = route.generate();

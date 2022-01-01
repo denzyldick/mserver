@@ -9,3 +9,4 @@ directories = "4.0.1"
 toml = "0.5.8"
 serde = { version = "1.0.132", features = ["derive"] }
 daemonize = "0.4.1"
+httparse = "1.5.1"

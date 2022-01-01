@@ -1,9 +1,11 @@
-use crate::config::Config;
+use crate::config::{Config, Page};
 use mserver::ThreadPool;
 use std::fs;
 use std::io::{Read, Write};
 use std::net::{TcpListener, TcpStream};
 use std::str;
+use std::collections;
+use std::collections::HashMap;
 
 pub struct Route {
     method: String,
@@ -20,24 +22,24 @@ impl Route {
 }
 
 pub struct Routes {
-    routes: Vec<Route>,
+    routes: HashMap<String, Page>,
 }
 
 impl Routes {
     pub fn add(&mut self, route: Route) {
-        self.routes.push(route);
+        todo!()
     }
 
     pub fn new() -> Routes {
-        Routes { routes: vec![] }
+        Routes {
+            routes: Default::default()
+        }
     }
 
     pub fn listen_and_serve(&mut self, config: Config) {
         for page in config.pages {
-            self.routes.push(Route {
-                method: "GET".to_string(),
-                markdown: format!("{}/{}", config.data_dir, page.markdown),
-            })
+            let key = page.markdown;
+            self.routes.insert(key,p );
         }
         let addr = format!("{}:{}", config.ip, config.port);
         let listener = TcpListener::bind(addr).unwrap();
@@ -49,28 +51,28 @@ impl Routes {
             stream.read(&mut buffer).unwrap();
             let get = b"GET";
             println!("{}", str::from_utf8(&buffer).unwrap());
+            pool.execute(move || {
+                let mut headers = [httparse::EMPTY_HEADER; 16];
+                let mut req = httparse::Request::new(&mut headers);
+                let path = req.path.unwrap();
+                let res = req.parse(&buffer).unwrap();
 
-            if buffer.starts_with(get) {
-                let re = Regex::new(format!(r"^GET /{}", "index")).unwrap();
-
-                pool.execute(move || {
-                    match Some(route) {
-                        Some(route) => {
-                            let html = route.generate();
-                            let response = format!(
-                                "HTTP/1.1 200 OK\r\nContent-Length: {}\r\n\r\n{}",
-                                html.len(),
-                                html
-                            );
-                            stream.write(response.as_bytes());
-                            stream.flush();
-                        }
-                        None => {
-                            println!("No route has been found.")
-                        }
-                    }
-                });
-            }
+                // match Some(route) {
+                //     Some(route) => {
+                //         let html = route.generate();
+                //         let response = format!(
+                //             "HTTP/1.1 200 OK\r\nContent-Length: {}\r\n\r\n{}",
+                //             html.len(),
+                //             html
+                //         );
+                //         stream.write(response.as_bytes());
+                //         stream.flush();
+                //     }
+                //     None => {
+                //         println!("No route has been found.")
+                //     }
+                // }
+            });
         }
     }
 }

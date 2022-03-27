@@ -1,3 +1,4 @@
+use std::borrow::Borrow;
 use crate::config::{Config, Page};
 use mserver::ThreadPool;
 use std::fs;
@@ -37,10 +38,10 @@ impl Routes {
     }
 
     pub fn listen_and_serve(&mut self, config: Config) {
-        for page in config.pages {
-            let key = page.markdown;
-            self.routes.insert(key,p );
-        }
+        // for page in config.pages {
+        //     let key = page.markdown;
+        //     self.routes.insert(key, page.borrow());
+        // }
         let addr = format!("{}:{}", config.ip, config.port);
         let listener = TcpListener::bind(addr).unwrap();
         let pool = ThreadPool::new(20);

@@ -55,25 +55,36 @@ impl Routes {
             pool.execute(move || {
                 let mut headers = [httparse::EMPTY_HEADER; 16];
                 let mut req = httparse::Request::new(&mut headers);
-                let path = req.path.unwrap();
+                let path = match req.path {
+                    None => &"index",
+                    Some(t) => t
+                };
                 let res = req.parse(&buffer).unwrap();
-
-                // match Some(route) {
-                //     Some(route) => {
-                //         let html = route.generate();
-                //         let response = format!(
-                //             "HTTP/1.1 200 OK\r\nContent-Length: {}\r\n\r\n{}",
-                //             html.len(),
-                //             html
-                //         );
-                //         stream.write(response.as_bytes());
-                //         stream.flush();
-                //     }
-                //     None => {
-                //         println!("No route has been found.")
-                //     }
-                // }
+                let route = Self::find_markdown(path).unwrap();
+                match Some(route) {
+                    Some(route) => {
+                        let html = route.generate();
+                        let response = format!(
+                            "HTTP/1.1 200 OK\r\nContent-Length: {}\r\n\r\n{}",
+                            html.len(),
+                            html
+                        );
+                        stream.write(response.as_bytes());
+                        stream.flush();
+                    }
+                    None => {
+                        println!("No route has been found.")
+                    }
+                }
             });
         }
+    }
+
+    fn find_markdown(path: &str) -> Option<Route> {
+        let route = Some(Route {
+            method: "GET".to_string(),
+            markdown: "index.md".to_string(),
+        });
+        route
     }
 }

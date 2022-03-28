@@ -53,7 +53,7 @@ impl Routes {
             let get = b"GET";
             println!("{}", str::from_utf8(&buffer).unwrap());
             pool.execute(move || {
-                let mut headers = [httparse::EMPTY_HEADER; 16];
+                let mut headers = [httparse::EMPTY_HEADER; 64];
                 let mut req = httparse::Request::new(&mut headers);
                 let path = match req.path {
                     None => &"index",

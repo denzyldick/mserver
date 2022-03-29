@@ -15,4 +15,4 @@ folder should also contain the markdown files that will be served by the server.
 
 - [ ] add HTTPS support.
 - [x] Extract hardcoded configuration to a configuration file.
-- []  Add an PKGBUILD script for arch based distros.
+- [ ]  Add an PKGBUILD script for arch based distros.

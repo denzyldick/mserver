@@ -13,8 +13,6 @@ mod config;
 mod server;
 
 fn main() {
-    println!("Starting mserver");
-    start();
     let stdout = std::fs::File::create("/tmp/mserver.out").unwrap();
     let stderr = std::fs::File::create("/tmp/mserver.err").unwrap();
 

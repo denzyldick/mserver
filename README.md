@@ -1,6 +1,9 @@
 # MServer
 
 Serve your markdown files to the internet.
+![Example gif](example.gif)
+
+
 
 ## Build it yourself.
 

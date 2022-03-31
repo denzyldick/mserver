@@ -13,6 +13,12 @@ folder should also contain the markdown files that will be served by the server.
 
 ### Todo
 
-- [ ] add HTTPS support.
+- [ ] Add HTTPS support.
 - [x] Extract hardcoded configuration to a configuration file.
-- [ ]  Add an PKGBUILD script for arch based distros.
+- [ ] Add an PKGBUILD script for arch based distros.
+- [ ] Update the configuration file if there missing fields.
+- [ ] Finish the routing
+- [ ] Use the current path as working directory and skip the whole default configuration path.
+- [ ] Make it possible to inject CSS, Javascript.
+- [ ] Read title from the configuration and remove the hardcoded title.
+- [ ] Make the configuration available at runtime without IO in the middle.

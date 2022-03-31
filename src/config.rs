@@ -4,11 +4,13 @@ use serde::Serialize;
 use std::borrow::Borrow;
 use std::fs;
 use std::io::ErrorKind;
+use std::fs::File;
 use std::path::Path;
+use std::io::prelude::*;
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Config {
-    pub ip: String,
+    pub host: String,
     pub port: u16,
     pub data_dir: String,
     pub(crate) pages: Vec<Page>,
@@ -40,7 +42,7 @@ impl Config {
 
             let file = fs::read_to_string(path.join("mserver.toml")).unwrap_or("".to_string());
             let parsed = toml::from_str(&file).unwrap_or(Config {
-                ip: "127.0.0.1".to_string(),
+                host: "127.0.0.1".to_string(),
                 port: 8080,
                 data_dir: data.to_string(),
                 pages: vec![
@@ -50,16 +52,23 @@ impl Config {
                     }
                 ],
             });
-            /// todo do not override file if it already exits.
-            let b = toml::to_string(&parsed).unwrap();
-            println!(
-                "Configuration file has been written to: {}",
-                path.to_str().unwrap()
-            );
-            println!("Looking for markdown files in: {}", data.to_string());
-            fs::write(path, b.as_bytes()).unwrap();
+
+            Self::store(path, &parsed);
             return parsed;
         }
         panic!("No configuration file has been found.");
+    }
+
+    fn store(path: &Path, parsed: &Config) {
+        let string = format!("{}/{}", &path.to_str().unwrap(), &"mserver.toml");
+        let b = toml::to_string(&parsed).unwrap();
+        match fs::write(string, b.as_bytes()) {
+            Ok(_) => {
+                println!("Creating a configuration file:");
+            }
+            Err(reason) => {
+                println!("Configuration file couldn't be stored: {}", reason.to_string());
+            }
+        }
     }
 }

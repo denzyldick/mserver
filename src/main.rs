@@ -13,6 +13,9 @@ mod config;
 mod server;
 
 fn main() {
+    start();
+    println!("Started");
+    return;
     let stdout = std::fs::File::create("/tmp/mserver.out").unwrap();
     let stderr = std::fs::File::create("/tmp/mserver.err").unwrap();
 
@@ -33,14 +36,14 @@ fn main() {
             start();
         }
         Err(e) => {
-            eprintln!("Error, {}", e)
+            println!("Error, {}", e)
         }
     }
 }
 
 fn start() {
     let config = crate::config::Config::new();
-    println!("Listening for incoming connection on {}:{}", config.ip, config.port);
+    println!("Listening for incoming connection on {}:{}", config.host, config.port);
     let mut routes = Routes::new();
     routes.listen_and_serve(config);
 }

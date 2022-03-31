@@ -15,7 +15,9 @@ pub struct Route {
 
 impl Route {
     pub fn generate(&self) -> String {
-        let contents = fs::read_to_string(&self.markdown).unwrap();
+        let config = Config::new();
+        let path = format!("{}/{}", config.data_dir, self.markdown);
+        let contents = fs::read_to_string(&path).unwrap();
         let body = markdown::to_html(&contents);
 
         format!("<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><title> {} </title></head><body>{}</body></html>", "welcome to my internet space.", body)
@@ -38,11 +40,7 @@ impl Routes {
     }
 
     pub fn listen_and_serve(&mut self, config: Config) {
-        // for page in config.pages {
-        //     let key = page.markdown;
-        //     self.routes.insert(key, page.borrow());
-        // }
-        let addr = format!("{}:{}", config.ip, config.port);
+        let addr = format!("{}:{}", config.host, config.port);
         let listener = TcpListener::bind(addr).unwrap();
         let pool = ThreadPool::new(20);
 

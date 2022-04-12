@@ -7,6 +7,7 @@ use std::net::{TcpListener, TcpStream};
 use std::str;
 use std::collections;
 use std::collections::HashMap;
+use std::option::Option;
 
 pub struct Route {
     method: String,
@@ -17,7 +18,7 @@ impl Route {
     pub fn generate(&self) -> String {
         let config = Config::new();
         let path = format!("{}/{}", config.data_dir, self.markdown);
-        let contents = fs::read_to_string(&path).unwrap();
+        let contents = fs::read_to_string(path).unwrap();
         let body = markdown::to_html(&contents);
 
         format!("<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><title> {} </title></head><body>{}</body></html>", "welcome to my internet space.", body)
@@ -53,13 +54,16 @@ impl Routes {
             pool.execute(move || {
                 let mut headers = [httparse::EMPTY_HEADER; 64];
                 let mut req = httparse::Request::new(&mut headers);
-                let path = match req.path {
-                    None => &"index",
-                    Some(t) => t
+                req.parse(&buffer).unwrap();
+                let mut path = match req.path {
+                    Some(t) => t,
+                    _ => { &"/" }
                 };
-                let res = req.parse(&buffer).unwrap();
-                let route = Self::find_markdown(path).unwrap();
-                match Some(route) {
+                if path == "/" {
+                    path = "index"
+                }
+                let route = Self::find_markdown(path);
+                match route {
                     Some(route) => {
                         let html = route.generate();
                         let response = format!(
@@ -78,11 +82,19 @@ impl Routes {
         }
     }
 
-    fn find_markdown(path: &str) -> Option<Route> {
-        let route = Some(Route {
-            method: "GET".to_string(),
-            markdown: "index.md".to_string(),
-        });
-        route
+    fn find_markdown(path: &str) -> std::option::Option<Route> {
+        let config = Config::new();
+        for page in config.pages {
+            let string = page.markdown.replace(".md", "");
+            // @todo only remove the first item in the string.
+            if path.replace("/", "") == string {
+                let route = Some(Route {
+                    method: "GET".to_string(),
+                    markdown: page.markdown,
+                });
+                return route;
+            }
+        }
+        None
     }
 }

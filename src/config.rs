@@ -49,7 +49,11 @@ impl Config {
                     Page {
                         title: "Welcome to my internet space".to_string(),
                         markdown: "index.md".to_string(),
-                    }
+                    },
+                    Page {
+                        title: "About me".to_string(),
+                        markdown: "about.md".to_string(),
+                    },
                 ],
             });
 

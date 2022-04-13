@@ -1,9 +1,9 @@
 # MServer
 
-Serve your markdown files to the internet.
+Serve your markdown files to the internet. Just execute a binary inside a folder containing markdown files, and they
+will automatically be served by a build in web-server.
+
 ![Example gif](example.gif)
-
-
 
 ## Build it yourself.
 
@@ -11,17 +11,13 @@ Serve your markdown files to the internet.
 2. Build using cargo.
 3. Run the executable.
 
-The executable will create a default folder with the configurations that is needed to successfully run this project. The
-folder should also contain the markdown files that will be served by the server.
-
 ### Todo
 
 - [ ] Add HTTPS support.
 - [x] Extract hardcoded configuration to a configuration file.
 - [ ] Add an PKGBUILD script for arch based distros.
 - [ ] Update the configuration file if there missing fields.
-- [ ] Finish the routing
-- [ ] Use the current path as working directory and skip the whole default configuration path.
+- [x] Use the current path as working directory and skip the whole default configuration path.
 - [ ] Make it possible to inject CSS, Javascript.
 - [ ] Read title from the configuration and remove the hardcoded title.
-- [ ] Make the configuration available at runtime without IO in the middle.
+- [ ] Configuration available at runtime without IO in the middle.

@@ -1,3 +1,5 @@
+extern crate core;
+
 use crate::server::Routes;
 use daemonize::Daemonize;
 use clap::Parser;
@@ -17,7 +19,6 @@ fn main() {
             .pid_file("mserver.pid")
             .chown_pid_file(false)
             .working_directory("./")
-            .umask(0o777)
             .stdout(stdout)
             .stderr(stderr)
             .exit_action(|| println!(""))

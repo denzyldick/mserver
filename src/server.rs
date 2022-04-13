@@ -1,13 +1,10 @@
-use std::borrow::Borrow;
 use crate::config::{Config, Page};
 use mserver::ThreadPool;
 use std::fs;
 use std::io::{Read, Write};
-use std::net::{TcpListener, TcpStream};
+use std::net::{TcpListener};
 use std::str;
-use std::collections;
 use std::collections::HashMap;
-use std::option::Option;
 
 pub struct Route {
     method: String,
@@ -18,9 +15,9 @@ impl Route {
     pub fn generate(&self) -> String {
         let config = Config::new();
         let path = format!("{}/{}", config.data_dir, self.markdown);
+        println!("Path:{}", path);
         let contents = fs::read_to_string(path).unwrap();
         let body = markdown::to_html(&contents);
-
         format!("<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><title> {} </title></head><body>{}</body></html>", "welcome to my internet space.", body)
     }
 }

@@ -11,3 +11,4 @@ serde = { version = "1.0.132", features = ["derive"] }
 daemonize = "0.4.1"
 httparse = "1.5.1"
 termion = "1.5.6"
+clap = { version = "3.1.8", features = ["derive"] }

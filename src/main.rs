@@ -1,12 +1,4 @@
-use crate::config::Config;
 use crate::server::Routes;
-use mserver::ThreadPool;
-use std::env;
-use std::fs;
-use std::io::prelude::*;
-use std::net::{TcpListener, TcpStream};
-use std::thread;
-use std::time::Duration;
 use daemonize::Daemonize;
 use clap::Parser;
 

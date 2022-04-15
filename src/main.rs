@@ -42,10 +42,11 @@ fn start() {
     routes.listen_and_serve(config);
 }
 
-
+/// Instantly server markdown files.
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
+    /// Run mserver in the background.
     #[clap(short, long)]
     detach: bool,
 }

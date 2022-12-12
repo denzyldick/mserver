@@ -1,10 +1,10 @@
 use crate::config::{Config, Page};
 use mserver::ThreadPool;
+use std::collections::HashMap;
 use std::fs;
 use std::io::{Read, Write};
-use std::net::{TcpListener};
+use std::net::TcpListener;
 use std::str;
-use std::collections::HashMap;
 
 pub struct Route {
     method: String,
@@ -33,7 +33,7 @@ impl Routes {
 
     pub fn new() -> Routes {
         Routes {
-            routes: Default::default()
+            routes: Default::default(),
         }
     }
 
@@ -54,7 +54,7 @@ impl Routes {
                 req.parse(&buffer).unwrap();
                 let mut path = match req.path {
                     Some(t) => t,
-                    _ => { &"/" }
+                    _ => &"/",
                 };
                 if path == "/" {
                     path = "index"

@@ -1,11 +1,11 @@
 use directories::ProjectDirs;
 use serde::Deserialize;
 use serde::Serialize;
-use std::{env, fs, io};
 use std::ffi::OsString;
 use std::io::ErrorKind;
-use toml::ser::Error;
 use std::process;
+use std::{env, fs, io};
+use toml::ser::Error;
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Config {
@@ -37,9 +37,7 @@ pub struct Page {
 impl Config {
     pub fn new() -> Config {
         let file = match Self::retrieve_stored_configuration() {
-            Ok(file) => {
-                      return  file
-            }
+            Ok(file) => return file,
             Err(err) => {
                 let cwd = Self::get_working_directory();
                 return Config {
@@ -65,21 +63,25 @@ impl Config {
     /// Get the current working directory.
     fn get_working_directory() -> Result<String, OsString> {
         let cwd = match env::current_dir() {
-            Ok(p) => { p.into_os_string().into_string() }
-            _ => panic!("No working directory.")
+            Ok(p) => p.into_os_string().into_string(),
+            _ => panic!("No working directory."),
         };
         cwd
     }
 
     fn retrieve_stored_configuration() -> Result<Config, toml::de::Error> {
-        let file = fs::read_to_string(format!("{}/mserver.toml", Self::get_working_directory().unwrap())).unwrap_or("".to_string());
+        let file = fs::read_to_string(format!(
+            "{}/mserver.toml",
+            Self::get_working_directory().unwrap()
+        ))
+        .unwrap_or("".to_string());
         return toml::from_str(&file);
     }
 
     /// Store the configuration file.
     fn store(path: String, parsed: Config) {
         let result = match toml::to_string(&parsed) {
-            Ok(r) => { r }
+            Ok(r) => r,
             Err(e) => {
                 eprintln!("Configuration file could't be saved: {}", e);
                 process::exit(1);
@@ -91,7 +93,10 @@ impl Config {
                 println!("Creating a configuration file:");
             }
             Err(reason) => {
-                println!("Configuration file couldn't be stored: {}", reason.to_string());
+                println!(
+                    "Configuration file couldn't be stored: {}",
+                    reason.to_string()
+                );
             }
         }
     }

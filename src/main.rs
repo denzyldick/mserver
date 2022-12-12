@@ -53,4 +53,3 @@ struct Args {
     #[clap(short, long)]
     detach: bool,
 }
-

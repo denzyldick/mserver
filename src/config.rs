@@ -38,7 +38,7 @@ impl Config {
     pub fn new() -> Config {
         let file = match Self::retrieve_stored_configuration() {
             Ok(file) => {
-                file
+                      return  file
             }
             Err(err) => {
                 let cwd = Self::get_working_directory();
@@ -60,10 +60,6 @@ impl Config {
                 };
             }
         };
-
-        let x = config;
-        Self::store(Self::get_working_directory().unwrap().to_string(), x);
-        return x;
     }
 
     /// Get the current working directory.
@@ -74,13 +70,14 @@ impl Config {
         };
         cwd
     }
-    fn retrieve_stored_configuration() -> Result<String, toml::de::Error> {
+
+    fn retrieve_stored_configuration() -> Result<Config, toml::de::Error> {
         let file = fs::read_to_string(format!("{}/mserver.toml", Self::get_working_directory().unwrap())).unwrap_or("".to_string());
         return toml::from_str(&file);
     }
 
     /// Store the configuration file.
-    fn store(path: String, parsed: &Config) {
+    fn store(path: String, parsed: Config) {
         let result = match toml::to_string(&parsed) {
             Ok(r) => { r }
             Err(e) => {

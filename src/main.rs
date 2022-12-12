@@ -1,8 +1,8 @@
 extern crate core;
 
 use crate::server::Routes;
-use daemonize::Daemonize;
 use clap::Parser;
+use daemonize::Daemonize;
 
 mod config;
 mod server;
@@ -37,7 +37,10 @@ fn main() {
 
 fn start() {
     let config = crate::config::Config::new();
-    println!("Listening for incoming connection on {}:{}", config.host, config.port);
+    println!(
+        "Listening for incoming connection on {}:{}",
+        config.host, config.port
+    );
     let mut routes = Routes::new();
     routes.listen_and_serve(config);
 }
@@ -50,3 +53,4 @@ struct Args {
     #[clap(short, long)]
     detach: bool,
 }
+

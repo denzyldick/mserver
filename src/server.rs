@@ -27,7 +27,7 @@ pub struct Routes {
 }
 
 impl Routes {
-    pub fn add(&mut self, route: Route) {
+    pub fn add(&mut self, _route: Route) {
         todo!()
     }
 
@@ -46,7 +46,7 @@ impl Routes {
             let mut stream = stream.unwrap();
             let mut buffer = [0; 1024];
             stream.read(&mut buffer).unwrap();
-            let get = b"GET";
+            let _get = b"GET";
             println!("{}", str::from_utf8(&buffer).unwrap());
             pool.execute(move || {
                 let mut headers = [httparse::EMPTY_HEADER; 64];
@@ -54,7 +54,7 @@ impl Routes {
                 req.parse(&buffer).unwrap();
                 let mut path = match req.path {
                     Some(t) => t,
-                    _ => &"/",
+                    _ => "/",
                 };
                 if path == "/" {
                     path = "index"
@@ -84,7 +84,7 @@ impl Routes {
         for page in config.pages {
             let string = page.markdown.replace(".md", "");
             // @todo only remove the first item in the string.
-            if path.replace("/", "") == string {
+            if path.replace('/', "") == string {
                 let route = Some(Route {
                     method: "GET".to_string(),
                     markdown: page.markdown,

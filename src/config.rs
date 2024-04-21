@@ -1,11 +1,11 @@
-use directories::ProjectDirs;
+
 use serde::Deserialize;
 use serde::Serialize;
 use std::ffi::OsString;
-use std::io::ErrorKind;
+
 use std::process;
-use std::{env, fs, io};
-use toml::ser::Error;
+use std::{env, fs};
+
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Config {
@@ -36,11 +36,11 @@ pub struct Page {
 
 impl Config {
     pub fn new() -> Config {
-        let file = match Self::retrieve_stored_configuration() {
-            Ok(file) => return file,
-            Err(err) => {
+        match Self::retrieve_stored_configuration() {
+            Ok(file) => file,
+            Err(_err) => {
                 let cwd = Self::get_working_directory();
-                return Config {
+                Config {
                     host: "127.0.0.1".to_string(),
                     port: 8080,
                     data_dir: cwd.unwrap().to_string(),
@@ -55,18 +55,18 @@ impl Config {
                             markdown: "about.md".to_string(),
                         },
                     ],
-                };
+                }
             }
-        };
+        }
     }
 
     /// Get the current working directory.
     fn get_working_directory() -> Result<String, OsString> {
-        let cwd = match env::current_dir() {
+        
+        match env::current_dir() {
             Ok(p) => p.into_os_string().into_string(),
             _ => panic!("No working directory."),
-        };
-        cwd
+        }
     }
 
     fn retrieve_stored_configuration() -> Result<Config, toml::de::Error> {
@@ -75,7 +75,7 @@ impl Config {
             Self::get_working_directory().unwrap()
         ))
         .unwrap_or("".to_string());
-        return toml::from_str(&file);
+        toml::from_str(&file)
     }
 
     /// Store the configuration file.
@@ -95,7 +95,7 @@ impl Config {
             Err(reason) => {
                 println!(
                     "Configuration file couldn't be stored: {}",
-                    reason.to_string()
+                    reason
                 );
             }
         }

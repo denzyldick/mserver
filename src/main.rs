@@ -9,7 +9,7 @@ mod server;
 
 fn main() {
     let args = Args::parse();
-    if args.detach == false {
+    if !args.detach {
         println!("Started");
         start();
     } else {
@@ -21,8 +21,8 @@ fn main() {
             .working_directory("./")
             .stdout(stdout)
             .stderr(stderr)
-            .exit_action(|| println!(""))
-            .privileged_action(|| println!(""));
+            .exit_action(|| println!())
+            .privileged_action(|| println!());
         match deamon.start() {
             Ok(_) => {
                 println!("Starting");

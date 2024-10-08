@@ -1,4 +1,3 @@
-
 use serde::Deserialize;
 use serde::Serialize;
 use std::ffi::OsString;
@@ -6,12 +5,12 @@ use std::ffi::OsString;
 use std::process;
 use std::{env, fs};
 
-
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Config {
     pub host: String,
     pub port: u16,
     pub data_dir: String,
+    pub markdown_location: String,
     pub(crate) pages: Vec<Page>,
     pub assets: Vec<Asset>,
 }
@@ -55,6 +54,7 @@ impl Config {
                             markdown: "about.md".to_string(),
                         },
                     ],
+                    markdown_location: "{markdown}".to_string(),
                 }
             }
         }
@@ -62,7 +62,6 @@ impl Config {
 
     /// Get the current working directory.
     fn get_working_directory() -> Result<String, OsString> {
-        
         match env::current_dir() {
             Ok(p) => p.into_os_string().into_string(),
             _ => panic!("No working directory."),
@@ -93,10 +92,7 @@ impl Config {
                 println!("Creating a configuration file:");
             }
             Err(reason) => {
-                println!(
-                    "Configuration file couldn't be stored: {}",
-                    reason
-                );
+                println!("Configuration file couldn't be stored: {}", reason);
             }
         }
     }

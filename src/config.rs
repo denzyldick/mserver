@@ -50,9 +50,28 @@ impl Config {
                             markdown: "index.md".to_string(),
                         },
                         Page {
-                            title: "About me".to_string(),
-                            markdown: "about.md".to_string(),
+                            title: "Write_your_own_static_analyzer_for_PHP".to_string(),
+                            markdown: "Write_your_own_static_analyzer_for_PHP.md".to_string(),
                         },
+                        Page {
+                            title: "How_I_made_impossible_to_write_spaghetti_code".to_string(),
+                            markdown: "How_I_made_impossible_to_write_spaghetti_code.md"
+                                .to_string(),
+                        },
+                        Page {
+                            title: "Detecting_spaghetti_code_in_AST_of_a_PHP_source_code".to_string(),
+                            markdown: "Detecting_spaghetti_code_in_AST_of_a_PHP_source_code.md"
+                                .to_string(),
+                        },
+                        Page{
+                            title:"improve_your_ci_output.".to_string(),
+                            markdown: "Improve_your_CI_output.md".to_string(),
+                        },
+                        Page {
+                            title: "Why_using_unserialize_PHP_is_a_bad_idea".to_string(),
+                            markdown:"Why_using_unserialize_PHP_is_a_bad_idea.md".to_string(),
+                        }
+
                     ],
                     markdown_location: "{markdown}".to_string(),
                 }
